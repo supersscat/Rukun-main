@@ -44,6 +44,23 @@ export class User {
         });
     };
 
+    static updateUser = (id: number, data: any) => {
+        return prisma.user.update({
+            where: { id },
+            data: {
+                username: data.username,
+                email: data.email,
+                role: data.role,
+            }
+        });
+    };
+
+    static deleteUser = (id: number) => {
+        return prisma.user.delete({
+            where: { id },
+        });
+    };
+
     static getUserById = (id: number) => {
         return prisma.user.findUnique({
             where: { id },
@@ -56,4 +73,48 @@ export class User {
             }
         });
     };
+
+    static getAllUsers = async (page: number, pageSize: number) => {
+        const skip = (page - 1) * pageSize;
+        const take = pageSize;
+
+        return prisma.user.findMany({
+            orderBy: {
+               username: 'asc'
+            },
+            skip: skip,
+            take: take,
+            select: {
+                id: true,
+                username: true,
+                email: true,
+                password: false,
+                role: true,
+                user_status: true,
+            },
+        });
+    };
+
+    static countAllUsers = () => {
+        return prisma.user.count();
+    };
+
+    static searchUser = (search: string) => {
+        return prisma.user.findMany({
+            where: {
+                OR: [
+                    {
+                        username: {
+                            contains: search,
+                        }
+                    },
+                    {
+                        email: {
+                            contains: search,
+                        }
+                    }
+                ]
+            }
+        })
+    }
 }

@@ -7,8 +7,33 @@ export default defineEventHandler( async (event) => {
         const endpoints = [
             '/api/auth/user',
             '/api/auth/logs',
-            '/api/auth/logout'
-            // Add more protected endpoints as needed
+            '/api/auth/logout',
+            '/api/auth/users',
+            '/api/auth/users/:id',
+            '/api/auth/users/search?q=:q',
+            '/api/auth/users?page=:page&pagesize=:pagesize',
+            '/api/auth/logs?page=:page&pagesize=:pagesize',
+            '/api/auth/users',
+            '/api/auth/citizen',
+            '/api/auth/citizen/:id',
+            '/api/auth/citizen/search?q=:q',
+            '/api/auth/citizen?page=:page&pagesize=:pagesize',
+            '/api/auth/kk',
+            '/api/auth/kk/:id',
+            '/api/auth/kk/search?q=:q',
+            '/api/auth/kk?page=:page&pagesize=:pagesize',
+            '/api/auth/cashflow',
+            '/api/auth/cashflow/:id',
+            '/api/auth/cashflow/search?q=:q',
+            '/api/auth/cashflow?page=:page&pagesize=:pagesize',
+            '/api/auth/notifications',
+            '/api/auth/notifications/:id',
+            '/api/auth/notifications/search?q=:q',
+            '/api/auth/notifications?page=:page&pagesize=:pagesize',
+            '/api/auth/application-letter',
+            '/api/auth/application-letter/:id',
+            '/api/auth/application-letter/search?q=:q',
+            '/api/auth/application-letter?page=:page&pagesize=:pagesize',
         ]
 
         const isHandledByThisMiddleware = endpoints.some(endopoint => {
@@ -31,8 +56,10 @@ export default defineEventHandler( async (event) => {
             }))
         }
 
+
         try {
             const userId = decoded.id
+
             const user = await User.getUserById(userId)
             event.context.auth = {user: user}
         } catch (error) {

@@ -1,6 +1,9 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -22,6 +25,11 @@ model User {
   update_at         DateTime            @updatedAt
   Log               Log[]
   RefreshToken      RefreshToken[]
+  ApplicationLetter ApplicationLetter[]
+  Notification      Notification[]
+  KK                KK[]
+  Citizen           Citizen[]
+  CashFlow          CashFlow[]
 }
 
 enum Action {
@@ -32,6 +40,24 @@ enum Action {
   DELETE
 }
 
+enum CategoryLetter {
+  SuratPengantarKTP
+  SuratKeteranganDomisili
+  SuratKeteranganUsaha
+  SuratPengantarNikah
+  SuratKeteranganTidakMampu
+}
+
+enum Category {
+  Kredit
+  Debit
+}
+
+enum Gender {
+  Male
+  Female
+}
+
 enum UserStatus {
   Active
   Inactive
@@ -40,6 +66,21 @@ enum UserStatus {
 enum Role {
   Admin
   User
+}
+
+model Citizen {
+  id        Int      @id @unique @default(autoincrement())
+  full_name String
+  dob       DateTime
+  gender    Gender
+  address   String
+  kk_id     Int?
+  nik       String   @unique
+  create_by Int
+  create_at DateTime @default(now())
+  update_at DateTime @updatedAt
+  user      User     @relation(fields: [create_by], references: [id], onDelete: Cascade)
+  KK        KK?      @relation(fields: [kk_id], references: [id], onDelete: Cascade)
 }
 
 model Log {
@@ -58,4 +99,49 @@ model RefreshToken {
   create_at     DateTime @default(now())
   update_at     DateTime @updatedAt
   user          User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+model CashFlow {
+  id          Int      @id @unique @default(autoincrement())
+  title       String
+  description String
+  date        DateTime @default(now())
+  category    Category
+  amount      Int
+  create_by   Int
+  create_at   DateTime @default(now())
+  update_at   DateTime @updatedAt
+  user        User     @relation(fields: [create_by], references: [id], onDelete: Cascade)
+}
+
+model KK {
+  id             Int       @id @unique @default(autoincrement())
+  head_of_family String
+  kk             String    @unique
+  create_by      Int
+  create_at      DateTime  @default(now())
+  update_at      DateTime  @updatedAt
+  user           User      @relation(fields: [create_by], references: [id], onDelete: Cascade)
+  Citizen        Citizen[]
+}
+
+model ApplicationLetter {
+  id              Int            @id @unique @default(autoincrement())
+  toEmail         String
+  category_letter CategoryLetter
+  data_nik        String
+  create_by       Int
+  create_at       DateTime       @default(now())
+  user            User           @relation(fields: [create_by], references: [id], onDelete: Cascade)
+}
+
+model Notification {
+  id          Int      @id @unique @default(autoincrement())
+  title       String
+  description String
+  date        DateTime @default(now())
+  create_by   Int
+  create_at   DateTime @default(now())
+  update_at   DateTime @updatedAt
+  user        User     @relation(fields: [create_by], references: [id], onDelete: Cascade)
 }

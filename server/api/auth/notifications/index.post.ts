@@ -33,7 +33,7 @@ export default defineEventHandler(async (event) => {
 
         // Send the notifications email to all users
         await NotificationEmailSender(newData.title, newData.description, newData.date, user.id);
-
+        console.log(NotificationEmailSender)
         // Create the log
         await createLog(payload);
 

@@ -26,6 +26,16 @@ export class KK {
             },
         });
     };
+    
+    static async findKKByHeadOrNumber(kk: string) {
+    const [kkTaken] = await Promise.all([
+        prisma.kK.findUnique({ where: { kk } }), 
+    ]);
+
+    return {
+        kkTaken: !!kkTaken,
+    };
+    };
 
     static getKKByNumber = async (kkNumber: string) => {
         return prisma.kK.findUnique({

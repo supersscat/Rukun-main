@@ -14,18 +14,36 @@
 
           <!-- Nomor Kartu Keluarga (KK) -->
           <div class="grid sm:grid-cols-3">
-            <label for="kk" class="block text-sm font-medium mb-2 w-full">NOMOR KARTU KELUARGA (KK)</label>
-            <input type="text" id="kk" v-model="kk"
-              class="col-span-2 py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
-              placeholder="1234567890">
+            <label for="kk" class="block text-sm font-medium mb-2 w-full">Nomor Keluarga (KK)</label>
+            <div class="col-span-2">
+              <input
+                type="text"
+                id="kk"
+                v-model="kk"
+                @input="handleKKInput"
+                maxlength="16"
+                class="py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                placeholder="1234567890123456"
+              />
+              <small class="text-red-500 italic">{{ kkError }}</small>
+            </div>
           </div>
-          <!-- Nama Kepala Keluarga -->
+
+          <!-- Nama Kepala Keluarga --> 
           <div class="grid sm:grid-cols-3">
-            <label for="name" class="block text-sm font-medium mb-2 w-full">NAMA KEPALA KELUARGA</label>
-            <input type="text" id="name" v-model="name"
-              class="col-span-2 py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
-              placeholder="Muhammad">
+            <label for="name" class="block text-sm font-medium mb-2 w-full">Nama Kepala Keluarga</label>
+            <div class="col-span-2">
+              <input
+                type="text"
+                id="name"
+                v-model="name"
+                class="py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                placeholder="Muhammad"
+              />
+              <small class="text-red-500 italic">{{ nameError }}</small> <!-- ⬅️ pindah ke sini -->
+            </div>
           </div>
+
 
           <!-- Submit Button -->
           <div class="space-x-3 self-end">
@@ -52,26 +70,62 @@ const { $toast } = useNuxtApp();
 const name = ref<string | null>(null);
 const kk = ref<string | null>(null);
 const isLoading = ref<boolean>(false);
+const kkError = ref<string | null>(null);
+const nameError = ref<string | null>(null);
+
 
 const clearForm = () => {
   name.value = null;
-  kk.value = null;
+  kk.value = null; 
 };
 
+const handleKKInput = (event: Event) => {
+  const input = (event.target as HTMLInputElement).value.replace(/\D/g, ''); // hapus non-digit
+  kk.value = input.slice(0, 16); // batasi maksimal 16 digit
+};
+
+//Check KK double atau ga
+const checkKKAvailability = async () => {
+  // Reset error state
+  kkError.value = null;
+  nameError.value = null;
+
+  let valid = true;
+  if (!name.value) {
+      nameError.value = 'Nama kepala keluarga wajib diisi.';
+      valid = false;
+    }
+  if (!kk.value || kk.value.length !== 16)  {
+      kkError.value = 'Nomor Kartu Keluarga harus terdiri dari 16 digit angka.';
+      valid = false;
+    }
+  if (!valid) return false;
+  
+
+  try {
+    const result = await $fetch<{ kkTaken: boolean }>('/api/auth/checkKK', {
+      method: 'post',
+      body: { kk: kk.value }
+    });
+
+    if (result.kkTaken) {
+      kkError.value = 'Nomor KK sudah terdaftar.';
+    }
+
+    return !result.kkTaken ;
+  } catch (err) {
+    kkError.value = 'Gagal memeriksa data KK. Coba lagi.';
+    return false;
+  }
+};
 
 
 // Form submission handler
 const handleSubmit = async () => {
+  const isAvailable = await checkKKAvailability();
+  if (!isAvailable) return; 
+    
   try {
-    // Basic validation
-    if (!name.value) {
-      $toast('Nama Kepala Keluarga harus diisi.', 'error');
-      return;
-    }
-    if (!kk.value) {
-      $toast('Nomer Induk Keluarga (NIK) harus diisi.', 'error');
-      return;
-    }
 
     isLoading.value = true;
 

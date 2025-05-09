@@ -29,6 +29,19 @@ export class Citizen {
         });
     };
 
+    static async FindCitizenByNIK(nik: string) {
+        const [nikTaken] = await Promise.all([
+            prisma.citizen.findUnique({ where: { nik } }), 
+        ]);
+
+        return {
+            nikTaken: !!nikTaken,
+        };
+    };
+
+
+
+
 
     static getCitizenById = (id: number) => {
         return prisma.citizen.findUnique({

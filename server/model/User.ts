@@ -11,9 +11,23 @@ export class User {
                 username: data.username,
                 email: data.email,
                 password: data.password,
+                update_at: new Date()
             }
         });
     };
+
+    static async findUserByUsernameOrEmail(username: string, email: string) {
+        const [usernameUser, emailUser] = await Promise.all([
+        prisma.user.findUnique({ where: { username } }),
+        prisma.user.findUnique({ where: { email } }),
+        ]);
+
+        return {
+        usernameTaken: !!usernameUser,
+        emailTaken: !!emailUser,
+        };
+    };
+
 
     static registerUser = (data: RegisterRequest) => {
         return prisma.user.create({
@@ -21,6 +35,7 @@ export class User {
                 username: data.username,
                 email: data.email,
                 password: data.password,
+                update_at: new Date()
             },
         });
     };

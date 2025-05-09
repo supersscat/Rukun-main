@@ -27,6 +27,7 @@
                       </svg>
                     </div>
                   </div>
+                  <small class="text-red-500 italic px-2">{{ usernameError }}</small>
                 </div>
                 <!-- End Form Group -->
   
@@ -45,8 +46,9 @@
                       </svg>
                     </div>
                   </div>
-                  <p class="hidden text-xs text-red-600 mt-2" id="email-error">Please include a valid email address so we
-                    can get back to you</p>
+                  <!-- <p class="hidden text-xs text-red-600 mt-2" id="email-error">Please include a valid email address so we -->
+                    <!-- can get back to you</p> -->
+                  <small class="text-red-500 italic px-2">{{ emailError }}</small>
                 </div>
                 <!-- End Form Group -->
   
@@ -264,7 +266,45 @@
   const isAgree = ref<boolean>(false)
   const isLoading = ref<boolean>(false)
   const confirmPasswordError = ref<string | null>(null)
+  const usernameError = ref<string | null>(null);
+  const emailError = ref<string | null>(null);
+
   
+  const checkAccountAvailability = async () => {
+    // reset error message dulu
+    usernameError.value = null;
+    emailError.value = null;
+
+    if (!username.value || !email.value) {
+      if (!username.value) usernameError.value = 'Username wajib diisi.';
+      if (!email.value) emailError.value = 'Email wajib diisi.';
+      return false;
+    }
+    
+    try {
+      const result = await $fetch('/api/auth/check', {
+        method: 'POST',
+        body: {
+          username: username.value,
+          email: email.value
+        }
+      });
+
+      if (result.usernameTaken) {
+        usernameError.value = 'Username sudah dipakai.';
+      }
+
+      if (result.emailTaken) {
+        emailError.value = 'Email sudah terdaftar.';
+      }
+
+      return !result.usernameTaken && !result.emailTaken;
+    } catch (err) {
+      emailError.value = 'Gagal memeriksa email. Coba lagi.';
+      return false;
+    }
+  };
+
   
   const isConfirmPassword = computed(() => {
     const isSame = password.value === confirmPassword.value
@@ -278,6 +318,9 @@
   })
   
   const handleSubmit = async () => {
+    const isAvailable = await checkAccountAvailability();
+    if (!isAvailable) return;
+
     try {
       isLoading.value = true
       await $fetch('/api/auth/register', {

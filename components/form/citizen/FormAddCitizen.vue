@@ -11,50 +11,73 @@
       <div class="h-full w-full mt-2 overflow-y-auto">
         <form @submit.prevent="handleSubmit">
           <div class="space-y-4 flex flex-col">
+            <!-- Nama Lengkap -->
             <div class="grid sm:grid-cols-3">
-              <label for="full_name" class="block text-sm font-medium mb-2 w-full">NAMA LENGKAP</label>
-              <input type="text" id="full_name"
-                     v-model="full_name"
-                     class="col-span-2 py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
-                     placeholder="John Doe">
+              <label for="full_name" class="block text-sm font-medium mb-2 w-full">Nama Lengkap</label>
+              <div class="col-span-2">
+                <input type="text" id="full_name" v-model="full_name"
+                  class="py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                  placeholder="John Doe">
+                <small class="text-red-500 italic">{{ nameError }}</small>
+              </div>
             </div>
+            <!-- NIK -->
             <div class="grid sm:grid-cols-3">
-              <label for="nik" class="block text-sm font-medium mb-2 w-full">NOMER INDUK KELUARGA (NIK)</label>
-              <input type="text" id="nik"
-                     v-model="nik"
-                     class="col-span-2 py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
-                     placeholder="xxxx xxxx xxxx xxxx">
+              <label for="nik" class="block text-sm font-medium mb-2 w-full">Nomor Induk Kependudukan (NIK)</label>
+              <div class="col-span-2">
+                <input type="text" id="nik" v-model="nik" @input="handleNIKInput" maxlength="16"
+                  class="py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                  placeholder="xxxxxxxxxxxxxxxx">
+                <small class="text-red-500 italic">{{ nikError }}</small>
+              </div>
             </div>
+
             <!-- Jenis Kelamin -->
             <div class="grid sm:grid-cols-3">
-              <label for="gender" class="block text-sm font-medium mb-2 w-full">JENIS KELAMIN</label>
-              <select id="gender"
-                      v-model="gender"
-                      class="col-span-2 py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none">
-                <option value="male">Laki-laki</option>
-                <option value="female">Perempuan</option>
-              </select>
+              <label for="gender" class="block text-sm font-medium mb-2 w-full">Jenis Kelamin</label>
+              <div class="col-span-2">
+                <select id="gender"
+                        v-model="gender"
+                        class="py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none">
+                  <option value="male">Laki-laki</option>
+                  <option value="female">Perempuan</option>
+                </select>
+                <small class="text-red-500 italic">{{ genderError }}</small>
+              </div>
             </div>
+
             <!-- Tanggal Lahir -->
             <div class="grid sm:grid-cols-3">
-              <label for="bod" class="block text-sm font-medium mb-2 w-full">TANGGAL LAHIR</label>
-              <input type="date" id="dob"
-                     v-model="dob"
-                     class="col-span-2 py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none">
+              <label for="dob" class="block text-sm font-medium mb-2 w-full">Tanggal Lahir</label>
+              <div class="col-span-2">
+                <input type="date" id="dob"
+                      v-model="dob"
+                      class="py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none">
+                <small class="text-red-500 italic">{{ dobError }}</small>
+              </div>
             </div>
+
             <!-- Alamat -->
             <div class="grid sm:grid-cols-3">
-              <label for="address" class="block text-sm font-medium mb-2 w-full">ALAMAT</label>
-              <textarea id="address"
-                        v-model="address"
-                        class="col-span-2 py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
-                        placeholder="Jl. Raya 1234"/>
+              <label for="address" class="block text-sm font-medium mb-2 w-full">Alamat</label>
+              <div class="col-span-2">
+                <textarea id="address"
+                          v-model="address"
+                          class="py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                          placeholder="Jl. Raya 1234"></textarea>
+                <small class="text-red-500 italic">{{ addError }}</small>
+              </div>
             </div>
+
             <!-- KK Dropdown -->
             <div class="grid sm:grid-cols-3">
-              <label for="kk_id" class="block text-sm font-medium mb-2 w-full">KARTU KELUARGA (KK)</label>
-              <ComboBoxKk class="col-span-2" @selectedKK="handleSelectKKID"/>
+              <label for="kk_id" class="block text-sm font-medium mb-2 w-full">Kartu Keluarga (KK)</label>
+              <div class="col-span-2">
+                <ComboBoxKk class="w-full" @selectedKK="handleSelectKKID" />
+                <small class="text-red-500 italic">{{ kkError }}</small>
+              </div>
             </div>
+
   
             <div class="space-x-3 self-end">
               <button type="submit"
@@ -84,6 +107,12 @@
   const address = ref<string | null>(null);
   const kk_id = ref<number | null>(null);
   const isLoading = ref<boolean>(false);
+  const nikError = ref<string | null>(null);
+  const nameError = ref<string | null>(null);
+  const genderError = ref<string | null>(null);
+  const dobError = ref<string | null>(null);
+  const addError = ref<string | null>(null);
+  const kkError = ref<string | null>(null);
   
   // Clear form state
   const clearForm = () => {
@@ -99,9 +128,74 @@
     kk_id.value = e.id;
   };
   
+  const handleNIKInput = (event: Event) => {
+    const input = (event.target as HTMLInputElement).value.replace(/\D/g, ''); // hapus non-digit
+    nik.value = input.slice(0, 16); // batasi maksimal 16 digit
+  };
+
+  const checkKKAvailability = async () =>{
+    nikError.value = null;
+    nameError.value = null;
+    genderError.value = null;
+    dobError.value = null;
+    addError.value = null;
+    kkError.value = null;
+
+  let valid = true;
+// saya tahu ini aga efisien pak, wkwkwkw
+  if (!full_name.value) {
+    nameError.value = 'Nama lengkap harus diisi.';
+    valid = false;
+  }
+
+  if (!nik.value || nik.value.length !== 16) {
+    nikError.value = 'NIK harus terdiri dari 16 digit angka.';
+    valid = false;
+  }
+
+  if (!gender.value) {
+    genderError.value = 'Lengkapi semua data sebelum menyimpan.';
+    valid = false;
+  }
+  if (!dob.value) {
+    dobError.value = 'Lengkapi semua data sebelum menyimpan.';
+    valid = false;
+  }
+  if (!address.value) {
+    addError.value = 'Lengkapi semua data sebelum menyimpan.';
+    valid = false;
+  }
+  if (!kk_id.value) {
+    kkError.value ='Lengkapi semua data sebelum menyimpan.';
+    return;
+  }
+
+  if (!valid) return false;
+    try {
+          console.log("Memulai pengecekan NIK:", nik.value);
+          const result = await $fetch<{ nikTaken: boolean }>('/api/auth/checkCitizen', {
+            method: 'post',
+            body: { nik: nik.value }
+          });
+          console.log("Hasil check:", result);
+          if (result.nikTaken) {
+            nikError.value = 'NIK sudah terdaftar.';
+            console.log("nik terdaftar")
+          }
+
+          return !result.nikTaken ;
+        } catch (err) {
+          nikError.value = 'Gagal memeriksa data NIK. Coba lagi.';
+          return false;
+      }
+  }
   
+    
   // Form submission handler
   const handleSubmit = async () => {
+    const isAvailable = await checkKKAvailability();
+    if (!isAvailable) return; 
+
     try {
       // Basic validation
       if (!full_name.value) {
@@ -109,8 +203,12 @@
         return;
       }
       if (!nik.value) {
-        $toast('Nomer Induk Keluarga (NIK) harus diisi.', 'error');
+        $toast('Nomer Induk Kependudukan (NIK) harus diisi.', 'error');
         return;
+      }
+      if (!nik.value || nik.value.length !== 16) {
+      $toast('Nomer Induk Kependudukan (NIK) harus 16 digit angka.', 'error');
+      return;
       }
       if (!gender.value) {
         $toast('Jenis Kelamin harus dipilih.', 'error');

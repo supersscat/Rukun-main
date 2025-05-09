@@ -58,7 +58,8 @@ export enum Category {
 export type Citizen = {
     id: number;
     full_name: string;
-    dob: Date;
+    // dob: Date;
+    dob: string;
     gender: Gender;
     address: string;
     kk_id: number;

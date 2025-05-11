@@ -1,75 +1,50 @@
-# Nuxt Minimal Starter
+# RUKUN - Nuxt Minimal Starter
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Panduan untuk menjalankan project ini di lokal:
 
-## Setup
+## Langkah Setup
 
-Make sure to install dependencies:
+1. **Clone repository**
+   ```bash
+   git clone https://github.com/username/rukun.git
+   cd Rukun-main
+   ```
 
-```bash
-# npm
-npm install
+2. **Buat database MySQL dengan nama `rukun`**
+   
+   Pastikan MySQL sudah berjalan, lalu buat database dengan nama `rukun`:
+   ```sql
+   CREATE DATABASE rukun;
+   ```
 
-# pnpm
-pnpm install
+3. **Install dependencies dan generate Prisma client**
+   ```bash
+   npm install
+   npx prisma generate
+   ```
 
-# yarn
-yarn install
+4. **Generate file migrasi Prisma**
+   ```bash
+   npx prisma migrate generate
+   ```
 
-# bun
-bun install
+5. **Jalankan project**
+   
+   **Development mode**
+   ```bash
+   npm run dev
+   ```
+   
+   **Production mode**
+   ```bash
+   npm run build
+   npm run start
+   ```
+
+---
+
+## Dokumentasi Tambahan
+
+* Dokumentasi Nuxt: [https://nuxt.com/docs/getting-started/introduction](https://nuxt.com/docs/getting-started/introduction)
+* Dokumentasi Deployment: [https://nuxt.com/docs/getting-started/deployment](https://nuxt.com/docs/getting-started/deployment)
 ```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.

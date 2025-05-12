@@ -318,8 +318,8 @@
   })
   
   const handleSubmit = async () => {
-    const isAvailable = await checkAccountAvailability();
-    if (!isAvailable) return;
+    // const isAvailable = await checkAccountAvailability();
+    // if (!isAvailable) return;
 
     try {
       isLoading.value = true
